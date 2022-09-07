@@ -12,7 +12,11 @@ jobs:
       - run: |
           echo PR: ${{ github.event.issue.pull_request }} 
           echo body: ${{ github.event.comment.body }}
-          echo pr number: ${{ github.event.issue.number }}
+          echo branch: ${{ github.event.issue.number }}
+      - name: Checkout PR Branch
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Checkout Pull Request
         run: hub pr checkout ${{ github.event.issue.number }}
         env:
