@@ -41,7 +41,7 @@ jobs:
       - uses: octokit/request-action@v2.x
         id: create_check_run
         with:
-          route: POST /repos/{owner}/{repo}/check-runs
+          route: POST /repos/${{ steps.request.outputs.repo_name}}/check-runs
           owner: octokit
           repo: request-action
           name: "Test check run"
