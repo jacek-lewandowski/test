@@ -5,10 +5,16 @@ on:
 
 jobs:
   build:
-    name: Post welcome comment
+    if: ${{ github.event.issue.pull_request }} && ${{ startsWith(github.event.comment.body, 'test ') }}
+    name: User specified ${{ github.event.comment.body }}
     runs-on: ubuntu-latest
 
     steps:
+      - name: Get test name from comment
+        run: |
+          echo "${{ github.event.comment.body }}"
+          echo "selected_it_test=$(echo "${{ github.event.comment.body }}" | cut -d ' ' -f 2 | xargs echo)" >> $GITHUB_ENV
+
       - run: |
           echo PR: ${{ github.event.issue.pull_request }} 
           echo body: ${{ github.event.comment.body }}
