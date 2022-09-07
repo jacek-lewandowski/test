@@ -37,6 +37,7 @@ jobs:
           repository: ${{ fromJson(steps.request.outputs.data).head.repo.full_name }}
           ref: ${{ steps.pr_data.outputs.branch }}
 
+      - uses: ouzi-dev/commit-status-updater@v1.1.0
 
       - uses: octokit/request-action@v2.x
         id: create_check_run
