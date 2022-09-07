@@ -12,6 +12,7 @@ jobs:
     steps:
       - name: Get test name from comment
         run: |
+          echo "${{ startsWith(github.event.comment.body, 'test ') }}"
           echo "${{ github.event.comment.body }}"
           echo "selected_it_test=$(echo "${{ github.event.comment.body }}" | cut -d ' ' -f 2 | xargs echo)" >> $GITHUB_ENV
 
