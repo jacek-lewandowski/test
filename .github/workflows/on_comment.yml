@@ -6,61 +6,45 @@ on:
 jobs:
   build:
     name: User specified ${{ github.event.comment.body }}
-    if: github.event.issue.pull_request && startsWith(github.event.comment.body, 'test ')
+    if: github.event.issue.pull_request && startsWith(github.event.comment.body, 'test ') && github.event.issue.pull_request.head.repo.full_name == github.event.issue.pull_request.base.repo.full_name
     runs-on: ubuntu-latest
 
     steps:
       - name: Get test name from comment
         run: |
-          echo "${{ startsWith(github.event.comment.body, 'test ') }}"
-          echo "${{ github.event.comment.body }}"
           echo "selected_it_test=$(echo "${{ github.event.comment.body }}" | cut -d ' ' -f 2 | xargs echo)" >> $GITHUB_ENV
-
-      - run: |
-          echo PR: ${{ github.event.issue.pull_request }} 
-          echo body: ${{ github.event.comment.body }}
-          echo branch: ${{ github.event.issue.number }}
-          echo TEST: "${selected_it_test}"
-
-      - name: Github API Request
-        id: request
-        uses: octokit/request-action@v2.0.0
-        with:
-          route: ${{ github.event.issue.pull_request.url }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Get PR information
-        id: pr_data
-        run: |
-          echo "::set-output name=branch::${{ fromJson(steps.request.outputs.data).head.ref }}"
-          echo "::set-output name=repo_name::${{ fromJson(steps.request.outputs.data).head.repo.full_name }}"
-          echo "::set-output name=sha::${{ fromJson(steps.request.outputs.data).head.sha }}"
 
       - name: Checkout PR Branch
         uses: actions/checkout@v2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          repository: ${{ fromJson(steps.request.outputs.data).head.repo.full_name }}
-          ref: ${{ steps.pr_data.outputs.branch }}
+          repository: ${{ github.event.issue.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.issue.pull_request.head.ref }}
 
       - uses: octokit/request-action@v2.x
+        name: Create check
         id: create_check_run
         with:
-          route: POST /repos/${{ steps.pr_data.outputs.repo_name }}/check-runs
-          name: "Test check run"
-          head_sha: ${{ steps.pr_data.outputs.sha }}
+          route: POST /repos/${{ github.event.issue.pull_request.head.repo.full_name }}/check-runs
+          name: ${{ github.event.comment.body }}
+          head_sha: ${{ github.event.issue.pull_request.head.sha }}
           status: in_progress
           output: | # The | is significant!
-            title: Test check run title
-            summary: A summary of the test check run
-            images:
-              - alt: Test image
-                image_url: https://octodex.github.com/images/jetpacktocat.png
+            title: Custom tests
+            summary: User specified integration ${{ github.event.comment.body }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-
-      - run: |
-          echo PR: ${{ github.event.issue.pull_request }} 
-          echo body: ${{ github.event.comment.body }}
+      - uses: octokit/request-action@v2.x
+        name: Complete check
+        id: complete_check_run
+        with:
+          route: POST /repos/${{ github.event.issue.pull_request.head.repo.full_name }}/check-runs
+          name: ${{ github.event.comment.body }}
+          head_sha: ${{ github.event.issue.pull_request.head.sha }}
+          status: ${{ job.status }}
+          output: | # The | is significant!
+            title: Custom tests
+            summary: User specified integration ${{ github.event.comment.body }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
