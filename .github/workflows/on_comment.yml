@@ -5,8 +5,8 @@ on:
 
 jobs:
   build:
-    if: github.event.issue.pull_request && startsWith(github.event.comment.body, 'test ')
     name: User specified ${{ github.event.comment.body }}
+    if: github.event.issue.pull_request && startsWith(github.event.comment.body, 'test ')
     runs-on: ubuntu-latest
 
     steps:
