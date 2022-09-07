@@ -13,6 +13,7 @@ jobs:
       - name: Get test name from comment
         run: |
           echo "selected_it_test=$(echo "${{ github.event.comment.body }}" | cut -d ' ' -f 2 | xargs echo)" >> $GITHUB_ENV
+          echo "${{ toJson(github.event) }}"
 
       - name: Checkout PR Branch
         uses: actions/checkout@v2
