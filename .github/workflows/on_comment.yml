@@ -1,0 +1,14 @@
+name: Post welcome comment
+on:
+  issue_comment:
+    types: [created, edited]
+
+jobs:
+  build:
+    name: Post welcome comment
+    runs-on: ubuntu-latest
+
+    steps:
+      - run: |
+          echo PR: ${{ github.event.issue.pull_request }} 
+          echo body: ${{ github.event.comment.body }}
