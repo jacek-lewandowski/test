@@ -41,9 +41,9 @@ jobs:
       - uses: octokit/request-action@v2.x
         id: create_check_run
         with:
-          route: POST /repos/${{ steps.request.outputs.repo_name}}/check-runs
-          owner: octokit
-          repo: request-action
+          route: POST /repos/{owner}/{repo}/check-runs
+          owner: ${{ github.owner }}
+          repo: ${{ github.repository }}
           name: "Test check run"
           head_sha: ${{ github.sha }}
           output: | # The | is significant!
