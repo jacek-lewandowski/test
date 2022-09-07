@@ -42,10 +42,10 @@ jobs:
         id: create_check_run
         with:
           route: POST /repos/{repo}/check-runs
-          owner: ${{ github.owner }}
           repo: ${{ github.repository }}
           name: "Test check run"
           head_sha: ${{ github.sha }}
+          status: in_progress
           output: | # The | is significant!
             title: Test check run title
             summary: A summary of the test check run
