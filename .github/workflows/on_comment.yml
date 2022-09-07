@@ -58,7 +58,8 @@ jobs:
           route: POST /repos/${{ steps.pr_data.outputs.repo_name }}/check-runs
           name: ${{ github.event.comment.body }}
           head_sha: ${{ steps.pr_data.outputs.sha }}
-          status: ${{ job.status }}
+          status: completed
+          conclusion: ${{ job.status }}
           output: | # The | is significant!
             title: Custom tests
             summary: User specified integration ${{ github.event.comment.body }}
