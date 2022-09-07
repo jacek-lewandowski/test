@@ -20,6 +20,7 @@ jobs:
           echo PR: ${{ github.event.issue.pull_request }} 
           echo body: ${{ github.event.comment.body }}
           echo branch: ${{ github.event.issue.number }}
+          echo TEST: "${selected_it_test}"
 
       - name: Github API Request
         id: request
