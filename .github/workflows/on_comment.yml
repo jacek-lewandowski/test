@@ -45,6 +45,7 @@ jobs:
           name: ${{ github.event.comment.body }}
           head_sha: ${{ steps.pr_data.outputs.sha }}
           status: in_progress
+          details_url: https://github.com/${{ steps.pr_data.outputs.repo_name }}/actions/runs/${{ github.run_id }}
           output: | # The | is significant!
             title: Custom tests
             summary: User specified integration ${{ github.event.comment.body }}
@@ -60,6 +61,7 @@ jobs:
           head_sha: ${{ steps.pr_data.outputs.sha }}
           status: completed
           conclusion: ${{ job.status }}
+          details_url: https://github.com/${{ steps.pr_data.outputs.repo_name }}/actions/runs/${{ github.run_id }}
           output: | # The | is significant!
             title: Custom tests
             summary: User specified integration ${{ github.event.comment.body }}
