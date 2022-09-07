@@ -60,5 +60,8 @@ jobs:
           head_sha: ${{ steps.pr_data.outputs.sha }}
           status: completed
           conclusion: ${{ job.status }}
+          output: | # The | is significant!
+            title: Custom tests
+            summary: User specified integration ${{ github.event.comment.body }} ([details](https://github.com/${{ steps.pr_data.outputs.repo_name }}/actions/runs/${{ github.run_id }}))
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
