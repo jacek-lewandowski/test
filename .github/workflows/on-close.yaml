@@ -1,0 +1,20 @@
+name: Check Issue on Close
+
+on:
+  issues:
+    types:
+      - closed
+
+jobs:
+  check-issue:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if issue is associated with SomeProject
+        id: check_project
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ISSUE_NUMBER=${{ github.event.issue.number }}
+          REPO=${{ github.repository }}
+
+          echo "${{ github.event.issue }}"
